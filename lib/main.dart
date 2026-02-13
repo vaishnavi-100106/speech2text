@@ -8,6 +8,7 @@ import 'package:greenvoice/screens/splash_screen.dart';
 import 'package:greenvoice/screens/home_screen.dart';
 import 'package:greenvoice/screens/history_screen.dart';
 import 'package:greenvoice/screens/settings_screen.dart';
+import 'package:greenvoice/screens/collaboration_screen.dart';
 import 'package:greenvoice/themes/app_theme.dart';
 
 void main() async {
@@ -44,6 +45,7 @@ class GreenVoiceApp extends StatelessWidget {
             '/home': (context) => const HomeScreen(),
             '/history': (context) => const HistoryScreen(),
             '/settings': (context) => const SettingsScreen(),
+            '/collaboration': (context) => const CollaborationScreen(),
           },
         );
       },

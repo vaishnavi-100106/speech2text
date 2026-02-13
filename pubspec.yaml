@@ -1,5 +1,5 @@
 name: greenvoice
-description: A Speech-to-Text Converter designed specifically for hearing-impaired users.
+description: A Speech-to-Text Converter designed specifically for hearing-impaired users, powered by Wav2Vec.
 
 publish_to: 'none'
 

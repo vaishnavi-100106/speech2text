@@ -10,6 +10,7 @@ import 'package:greenvoice/widgets/custom_button.dart';
 import 'package:greenvoice/widgets/transcription_display.dart';
 import 'package:greenvoice/screens/history_screen.dart';
 import 'package:greenvoice/screens/settings_screen.dart';
+import 'package:greenvoice/screens/collaboration_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -59,6 +60,15 @@ class _HomeScreenState extends State<HomeScreen>
       appBar: AppBar(
         title: const Text('GreenVoice'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.people),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CollaborationScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {

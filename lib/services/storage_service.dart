@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageService {
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   static const String _transcriptionKey = 'transcription_history';
   static const String _fontSizeKey = 'font_size';
   static const String _highContrastKey = 'high_contrast';

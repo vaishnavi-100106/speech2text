@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:greenvoice/providers/settings_provider.dart';
 import 'package:greenvoice/providers/theme_provider.dart';
 import 'package:greenvoice/providers/audio_recorder_provider.dart';
-import 'package:greenvoice/services/whisper_api_service.dart';
+import 'package:greenvoice/services/vnr_transformer_service.dart';
 import 'package:greenvoice/themes/app_theme.dart';
 import 'package:greenvoice/widgets/custom_button.dart';
 
@@ -15,27 +16,69 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final TextEditingController _apiKeyController = TextEditingController();
-  bool _showApiKey = false;
-  bool _apiKeyValid = false;
+  final TextEditingController _vnrController = TextEditingController();
+  bool _showVnrUrl = false;
+  bool _vnrValid = false;
 
   @override
   void initState() {
     super.initState();
-    _checkApiKeyStatus();
+    _loadEndpointUrl();
   }
 
-  Future<void> _checkApiKeyStatus() async {
-    final whisperService = WhisperApiService();
-    final hasKey = await whisperService.hasApiKey();
+  Future<void> _loadEndpointUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedVnrUrl = prefs.getString('vnr_url') ?? '';
+    
+    _vnrController.text = savedVnrUrl;
+    
     setState(() {
-      _apiKeyValid = hasKey;
+      _vnrValid = savedVnrUrl.isNotEmpty;
     });
+  }
+
+  Future<void> _testVnrConnection() async {
+    final vnrUrl = _vnrController.text.trim();
+    
+    if (vnrUrl.isEmpty) {
+      _showErrorDialog('Please enter a VNR Transformer URL');
+      return;
+    }
+    
+    final vnrService = VNRTransformerService();
+    if (!vnrService.isValidVnrUrl(vnrUrl)) {
+      _showErrorDialog('Invalid VNR Transformer URL format');
+      return;
+    }
+    
+    try {
+      final isConnected = await vnrService.testConnection();
+      
+      setState(() {
+        _vnrValid = isConnected;
+      });
+      
+      if (isConnected) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('vnr_url', vnrUrl);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('VNR Transformer connection successful!'),
+            backgroundColor: AppTheme.successColor,
+          ),
+        );
+      } else {
+        _showErrorDialog('VNR Transformer connection failed. Please check the URL and make sure the VNR server is running.');
+      }
+    } catch (e) {
+      _showErrorDialog('VNR Transformer connection test failed: $e');
+    }
   }
 
   @override
   void dispose() {
-    _apiKeyController.dispose();
+    _vnrController.dispose();
     super.dispose();
   }
 
@@ -81,13 +124,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildApiSection() {
     return _buildSection(
-      title: 'API Configuration',
-      icon: Icons.api,
+      title: 'Speech-to-Text Settings',
+      icon: Icons.settings_voice,
       children: [
         Consumer<AudioRecorderProvider>(
           builder: (context, audioProvider, child) {
             if (audioProvider.errorMessage != null) {
-              Container(
+              return Container(
                 margin: const EdgeInsets.only(bottom: 16),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -122,50 +165,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         
         TextFormField(
-          controller: _apiKeyController,
-          obscureText: !_showApiKey,
-          decoration: InputDecoration(
-            labelText: 'OpenAI API Key',
-            hintText: 'sk-...',
-            suffixIcon: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(_showApiKey ? Icons.visibility_off : Icons.visibility),
-                  onPressed: () {
-                    setState(() {
-                      _showApiKey = !_showApiKey;
-                    });
-                  },
-                ),
-                if (_apiKeyValid)
-                  const Icon(Icons.check_circle, color: AppTheme.successColor),
-              ],
+            controller: _vnrController,
+            obscureText: !_showVnrUrl,
+            decoration: InputDecoration(
+              labelText: 'Speech-to-Text Server URL',
+              hintText: 'http://localhost:5000',
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(_showVnrUrl ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        _showVnrUrl = !_showVnrUrl;
+                      });
+                    },
+                  ),
+                  if (_vnrValid)
+                    const Icon(Icons.check_circle, color: AppTheme.successColor),
+                ],
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+            onChanged: (value) {
+              final isValid = value.isNotEmpty && value.startsWith('http');
+              setState(() {
+                _vnrValid = isValid;
+              });
+            },
+          ),
+          
+          const SizedBox(height: 12),
+          
+          CustomButton(
+            text: 'Test Connection',
+            icon: Icons.cloud_done,
+            onPressed: _testVnrConnection,
+            backgroundColor: AppTheme.primaryGreen,
+          ),
+          
+          const SizedBox(height: 8),
+          
+          Text(
+            'Configure your speech-to-text server URL. Make sure the service is accessible from your device.',
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             ),
           ),
-        ),
-        
-        const SizedBox(height: 12),
-        
-        CustomButton(
-          text: 'Save API Key',
-          icon: Icons.save,
-          onPressed: _saveApiKey,
-          backgroundColor: AppTheme.primaryGreen,
-        ),
-        
-        const SizedBox(height: 8),
-        
-        Text(
-          'Your API key is stored securely on your device and is never shared.',
-          style: TextStyle(
-            fontSize: 12,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-          ),
-        ),
+        ],
       ],
     );
   }
@@ -339,40 +389,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Future<void> _saveApiKey() async {
-    final apiKey = _apiKeyController.text.trim();
-    
-    if (apiKey.isEmpty) {
-      _showErrorDialog('Please enter an API key');
-      return;
-    }
-    
-    if (!apiKey.startsWith('sk-')) {
-      _showErrorDialog('Invalid API key format. API keys should start with "sk-"');
-      return;
-    }
-    
-    try {
-      final whisperService = WhisperApiService();
-      await whisperService.setApiKey(apiKey);
-      
-      setState(() {
-        _apiKeyValid = true;
-      });
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('API key saved successfully'),
-          backgroundColor: AppTheme.successColor,
-        ),
-      );
-      
-      _apiKeyController.clear();
-    } catch (e) {
-      _showErrorDialog('Failed to save API key: $e');
-    }
-  }
-
+  
   void _showLanguageDialog() {
     final languages = {
       'en': 'English',

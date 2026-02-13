@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenVoice - Speech-to-Text for Hearing Impaired</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #C8E6C9;
+            --secondary-green: #81C784;
+            --accent-green: #A5D6A7;
+            --background: #F1F8E9;
+            --surface: #FFFFFF;
+            --on-surface: #1B5E20;
+            --on-surface-variant: #424242;
+            --error: #F44336;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #E8F5E8 100%);
+            min-height: 100vh;
+            color: var(--on-surface);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--surface);
+            min-height: 100vh;
+            box-shadow: 0 0 40px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .app-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .app-header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px var(--shadow);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            color: var(--on-surface-variant);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .nav-item:hover {
+            background: var(--accent-green);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            padding-bottom: 100px;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px var(--shadow);
+            border: 1px solid #E8F5E8;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--on-surface);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Recording Section */
+        .recording-controls {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--error) 0%, #D32F2F 100%);
+            border: none;
+            color: white;
+            font-size: 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(244, 67, 54, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .record-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(244, 67, 54, 0.5);
+        }
+
+        .record-button.recording {
+            background: linear-gradient(135deg, var(--success) 0%, var(--primary-dark) 100%);
+            animation: pulse 2s infinite;
+            box-shadow: 0 8px 30px rgba(76, 175, 80, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        .record-text {
+            margin-top: 20px;
+            font-size: 16px;
+            color: var(--on-surface-variant);
+        }
+
+        /* Transcription Display */
+        .transcription-display {
+            background: var(--background);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 120px;
+            border: 2px dashed var(--primary-light);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--on-surface);
+        }
+
+        .transcription-display.empty {
+            color: var(--on-surface-variant);
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Settings */
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: 16px;
+            color: var(--on-surface);
+        }
+
+        /* History */
+        .history-item {
+            background: var(--background);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .history-time {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-bottom: 8px;
+        }
+
+        .history-text {
+            font-size: 16px;
+            color: var(--on-surface);
+        }
+
+        /* Messages */
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-left: 4px solid var(--success);
+        }
+
+        .message.error {
+            background: #FFEBEE;
+            color: var(--error);
+            border-left: 4px solid var(--error);
+        }
+
+        .message.info {
+            background: #E3F2FD;
+            color: #1976D2;
+            border-left: 4px solid #2196F3;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--on-surface-variant);
+        }
+
+        .spinner {
+            border: 3px solid var(--primary-light);
+            border-top: 3px solid var(--primary-green);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .app-container {
+                max-width: 100%;
+                box-shadow: none;
+            }
+            
+            .bottom-nav {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="app-header">
+            <h1>
+                🌿 GreenVoice
+            </h1>
+            <div class="subtitle">Speech-to-Text for Hearing Impaired</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Home Tab -->
+            <div id="home-tab" class="tab-content active">
+                <!-- Recording Card -->
+                <div class="card">
+                    <div class="card-title">
+                        🎙️ Voice Recording
+                    </div>
+                    <div class="recording-controls">
+                        <button class="record-button" id="record-btn" onclick="toggleRecording()">
+                            🎤
+                        </button>
+                        <div class="record-text" id="record-text">
+                            Tap microphone to record
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transcription Card -->
+                <div class="card">
+                    <div class="card-title">
+                        📝 Transcription
+                    </div>
+                    <div class="transcription-display empty" id="transcription">
+                        Your speech will appear here...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">
+                        ⚙️ Settings
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">Speech-to-Text</div>
+                        <div>✅ Built-in Wav2Vec2</div>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">Status</div>
+                        <div>🟢 Ready</div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-label">Model</div>
+                        <div>Wav2Vec2 Large</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="history-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">
+                        📝 Your Recordings
+                    </div>
+                    <div id="history-list">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Loading history...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('settings')">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">Settings</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('history')">
+                <span class="nav-icon">📚</span>
+                <span class="nav-label">History</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isRecording = false;
+        let transcriptionHistory = [];
+        let audioContext = null;
+        let mediaRecorder = null;
+        let audioChunks = [];
+
+        // Initialize app
+        window.onload = function() {
+            loadHistory();
+            initAudio();
+        };
+
+        // Initialize audio context
+        async function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('Audio context initialized');
+            } catch (error) {
+                console.error('Error initializing audio:', error);
+                showMessage('Microphone access required for speech-to-text', 'error');
+            }
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Add active class to clicked nav item
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Load data for specific tabs
+            if (tabName === 'history') {
+                displayHistory();
+            }
+        }
+
+        // Recording functions
+        async function toggleRecording() {
+            console.log('Toggle recording called, isRecording:', isRecording);
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                await stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            const recordBtn = document.getElementById('record-btn');
+            const recordText = document.getElementById('record-text');
+            const transcription = document.getElementById('transcription');
+            
+            try {
+                // Initialize audio context if needed
+                if (!audioContext) {
+                    await initAudio();
+                }
+
+                // Get microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        sampleRate: 16000,
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                        latency: 0,
+                        googEchoCancellation: true,
+                        googNoiseSuppression: true,
+                        googAutoGainControl: true,
+                        googHighpassFilter: false
+                    } 
+                });
+
+                // Create media recorder
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus',
+                    audioBitsPerSecond: 128000
+                });
+
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await transcribeAudio(audioBlob);
+                    
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                // Start recording
+                mediaRecorder.start();
+                
+                // Update UI
+                isRecording = true;
+                console.log('Recording started, isRecording set to:', isRecording);
+                recordBtn.classList.add('recording');
+                recordBtn.innerHTML = '⏹️';
+                recordText.textContent = 'Recording... Speak now! (Press button to stop)';
+                transcription.textContent = 'Recording in progress...';
+                transcription.classList.remove('empty');
+
+            } catch (error) {
+                console.error('Error starting recording:', error);
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function stopRecording() {
+            const recordBtn = document.getElementById('record-btn');
+            const recordText = document.getElementById('record-text');
+            
+            try {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+
+                // Update UI
+                isRecording = false;
+                console.log('Recording stopped, isRecording set to:', isRecording);
+                recordBtn.classList.remove('recording');
+                recordBtn.innerHTML = '🎤';
+                recordText.textContent = 'Processing...';
+
+            } catch (error) {
+                console.error('Error stopping recording:', error);
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function transcribeAudio(audioBlob) {
+            try {
+                console.log('Audio blob size:', audioBlob.size, 'bytes');
+                
+                // Convert webm to WAV in browser
+                const audioBuffer = await audioContext.decodeAudioData(await audioBlob.arrayBuffer());
+                console.log('Audio buffer:', audioBuffer.numberOfChannels, 'channels,', audioBuffer.length, 'samples,', audioBuffer.sampleRate, 'Hz');
+                
+                const wavBlob = audioBufferToWav(audioBuffer);
+                console.log('WAV blob size:', wavBlob.size, 'bytes');
+                
+                // Convert blob to base64
+                const reader = new FileReader();
+                reader.readAsDataURL(wavBlob);
+                
+                reader.onloadend = async () => {
+                    const base64Audio = reader.result.split(',')[1];
+                    console.log('Base64 audio length:', base64Audio.length);
+                    
+                    // Send to backend for transcription
+                    const response = await fetch('/transcribe', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            audio: base64Audio,
+                            format: 'wav'
+                        })
+                    });
+
+                    console.log('Response status:', response.status);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Response data:', data);
+                        const transcriptionText = data.transcription || 'No transcription available';
+                        
+                        // Update UI
+                        const transcription = document.getElementById('transcription');
+                        const recordText = document.getElementById('record-text');
+                        transcription.textContent = transcriptionText;
+                        transcription.classList.remove('empty');
+                        recordText.textContent = 'Tap microphone to record again';
+
+                        // Show success message
+                        showMessage('✅ Audio recorded successfully!', 'success');
+
+                        // Add to history
+                        addToHistory(transcriptionText);
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Server error:', errorText);
+                        throw new Error(`Server error: ${response.status} - ${errorText}`);
+                    }
+                };
+            } catch (error) {
+                console.error('Error transcribing audio:', error);
+                showMessage(`Transcription error: ${error.message}`, 'error');
+                
+                // Reset UI on error
+                const recordText = document.getElementById('record-text');
+                recordText.textContent = 'Tap microphone to record';
+            }
+        }
+
+        // Convert AudioBuffer to WAV
+        function audioBufferToWav(buffer) {
+            const length = buffer.length * buffer.numberOfChannels * 2 + 44;
+            const arrayBuffer = new ArrayBuffer(length);
+            const view = new DataView(arrayBuffer);
+            const channels = [];
+            let offset = 0;
+            let pos = 0;
+
+            // Write WAV header
+            const setUint16 = (data) => {
+                view.setUint16(pos, data, true);
+                pos += 2;
+            };
+            const setUint32 = (data) => {
+                view.setUint32(pos, data, true);
+                pos += 4;
+            };
+
+            // RIFF identifier
+            setUint32(0x46464952);
+            // file length
+            setUint32(length - 8);
+            // WAVE identifier
+            setUint32(0x45564157);
+            // fmt chunk identifier
+            setUint32(0x20746d66);
+            // chunk length
+            setUint32(16);
+            // sample format (PCM)
+            setUint16(1);
+            // channel count
+            setUint16(buffer.numberOfChannels);
+            // sample rate
+            setUint32(buffer.sampleRate);
+            // byte rate
+            setUint32(buffer.sampleRate * buffer.numberOfChannels * 2);
+            // block align
+            setUint16(buffer.numberOfChannels * 2);
+            // bits per sample
+            setUint16(16);
+            // data chunk identifier
+            setUint32(0x61746164);
+            // data chunk length
+            setUint32(length - pos - 4);
+
+            // Write interleaved data
+            for (let i = 0; i < buffer.numberOfChannels; i++) {
+                channels.push(buffer.getChannelData(i));
+            }
+
+            while (pos < length) {
+                for (let i = 0; i < buffer.numberOfChannels; i++) {
+                    let sample = Math.max(-1, Math.min(1, channels[i][offset]));
+                    sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+                    view.setInt16(pos, sample, true);
+                    pos += 2;
+                }
+                offset++;
+            }
+
+            return new Blob([arrayBuffer], { type: 'audio/wav' });
+        }
+
+        // History management
+        function addToHistory(text) {
+            const now = new Date();
+            const historyItem = {
+                text: text,
+                timestamp: now.toISOString(),
+                timeString: now.toLocaleString()
+            };
+            
+            transcriptionHistory.unshift(historyItem);
+            if (transcriptionHistory.length > 50) {
+                transcriptionHistory = transcriptionHistory.slice(0, 50);
+            }
+            
+            saveHistory();
+            displayHistory();
+        }
+
+        function displayHistory() {
+            const historyList = document.getElementById('history-list');
+            
+            if (transcriptionHistory.length === 0) {
+                historyList.innerHTML = `
+                    <div class="message info">
+                        📝 No recordings yet. Tap the microphone to start!
+                    </div>
+                `;
+                return;
+            }
+            
+            historyList.innerHTML = transcriptionHistory.map(item => `
+                <div class="history-item">
+                    <div class="history-time">${item.timeString}</div>
+                    <div class="history-text">${item.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function saveHistory() {
+            localStorage.setItem('greenvoice-history', JSON.stringify(transcriptionHistory));
+        }
+
+        function loadHistory() {
+            const saved = localStorage.getItem('greenvoice-history');
+            if (saved) {
+                transcriptionHistory = JSON.parse(saved);
+            }
+        }
+
+        // Message display
+        function showMessage(text, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            
+            // Insert at the top of the current tab
+            const activeTab = document.querySelector('.tab-content.active');
+            activeTab.insertBefore(messageDiv, activeTab.firstChild);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

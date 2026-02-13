@@ -1,0 +1,9 @@
+# VNR Transformer Dependencies
+torch torchaudio transformers
+sounddevice numpy scipy
+librosa soundfile
+flask flask-cors
+websockets asyncio
+noisereduce
+matplotlib
+pyaudio  # For real-time audio input

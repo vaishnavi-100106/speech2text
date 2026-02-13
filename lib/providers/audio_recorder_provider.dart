@@ -3,13 +3,13 @@ import 'package:record/record.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vibration/vibration.dart';
-import 'package:greenvoice/services/whisper_api_service.dart';
+import 'package:greenvoice/services/vnr_transformer_service.dart';
 import 'package:greenvoice/services/storage_service.dart';
 
 class AudioRecorderProvider extends ChangeNotifier {
   final AudioRecorder _recorder = AudioRecorder();
   final AudioPlayer _player = AudioPlayer();
-  final WhisperApiService _whisperService = WhisperApiService();
+  final VNRTransformerService _vnrService = VNRTransformerService();
   final StorageService _storageService = StorageService();
   
   bool _isRecording = false;
@@ -120,7 +120,10 @@ class AudioRecorderProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      final transcription = await _whisperService.transcribeAudio(_currentFilePath);
+      String transcription;
+      
+      // Always use the speech-to-text service
+      transcription = await _vnrService.transcribeAudio(_currentFilePath);
       
       _transcribedText = transcription;
       
@@ -203,6 +206,16 @@ class AudioRecorderProvider extends ChangeNotifier {
   void clearError() {
     _errorMessage = null;
     notifyListeners();
+  }
+
+  Future<bool> testConnection() async {
+    try {
+      // Always test the speech-to-text service connection
+      return await _vnrService.testConnection();
+    } catch (e) {
+      _setError('Connection test failed: $e');
+      return false;
+    }
   }
 
   @override
