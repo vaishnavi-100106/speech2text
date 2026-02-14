@@ -28,79 +28,101 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, var(--background) 0%, #E8F5E8 100%);
             min-height: 100vh;
             color: var(--on-surface);
-            line-height: 1.6;
+            line-height: 1.5;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .app-container {
-            max-width: 480px;
+            max-width: 100%;
             margin: 0 auto;
             background: var(--surface);
             min-height: 100vh;
-            box-shadow: 0 0 40px var(--shadow);
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 480px;
+                box-shadow: 0 0 40px var(--shadow);
+            }
         }
 
         /* Header */
         .app-header {
             background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 20px;
+            padding: 24px 20px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 2px 20px rgba(76, 175, 80, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .app-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            letter-spacing: -0.5px;
         }
 
         .app-header .subtitle {
             font-size: 14px;
             opacity: 0.9;
-            font-weight: 400;
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
 
         /* Main Content */
         .main-content {
-            padding: 20px;
-            padding-bottom: 100px;
-            min-height: calc(100vh - 140px);
+            padding: 16px;
+            padding-bottom: 120px;
+            min-height: calc(100vh - 100px);
         }
 
         /* Cards */
         .card {
             background: var(--surface);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 12px var(--shadow);
-            border: 1px solid #E8F5E8;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(76, 175, 80, 0.08);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
 
         .card-title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             color: var(--on-surface);
             margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
+            letter-spacing: -0.2px;
         }
 
         /* Recording Section */
         .recording-controls {
             text-align: center;
-            padding: 40px 20px;
+            padding: 32px 20px;
         }
 
         .record-button {
@@ -112,21 +134,26 @@
             color: white;
             font-size: 48px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 30px rgba(244, 67, 54, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(244, 67, 54, 0.25);
             position: relative;
             overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .record-button:hover {
             transform: scale(1.05);
-            box-shadow: 0 12px 40px rgba(244, 67, 54, 0.5);
+            box-shadow: 0 12px 32px rgba(244, 67, 54, 0.35);
+        }
+
+        .record-button:active {
+            transform: scale(0.95);
         }
 
         .record-button.recording {
             background: linear-gradient(135deg, var(--success) 0%, var(--primary-dark) 100%);
             animation: pulse 2s infinite;
-            box-shadow: 0 8px 30px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.25);
         }
 
         @keyframes pulse {
@@ -136,21 +163,36 @@
         }
 
         .record-text {
-            margin-top: 20px;
-            font-size: 16px;
+            margin-top: 16px;
+            font-size: 15px;
             color: var(--on-surface-variant);
+            font-weight: 500;
         }
 
         /* Transcription Display */
         .transcription-display {
             background: var(--background);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 20px;
-            min-height: 120px;
+            min-height: 100px;
             border: 2px dashed var(--primary-light);
             font-size: 16px;
             line-height: 1.6;
             color: var(--on-surface);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .transcription-display:hover {
+            border-color: var(--primary-green);
+            background: rgba(76, 175, 80, 0.02);
+        }
+
+        .transcription-display.loading {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.05) 0%, rgba(76, 175, 80, 0.02) 100%);
+            border-style: solid;
+            border-color: var(--primary-green);
+            color: var(--primary-dark);
+            font-style: italic;
         }
 
         .transcription-display.empty {
@@ -159,6 +201,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 15px;
         }
 
         /* Status Indicators */
@@ -166,21 +209,24 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .status-indicator.connected {
-            background: var(--primary-light);
+            background: linear-gradient(135deg, var(--primary-light) 0%, rgba(76, 175, 80, 0.1) 100%);
             color: var(--primary-dark);
+            border: 1px solid rgba(76, 175, 80, 0.2);
         }
 
         .status-indicator.disconnected {
-            background: #FFEBEE;
+            background: linear-gradient(135deg, #FFEBEE 0%, rgba(244, 67, 54, 0.05) 100%);
             color: var(--error);
+            border: 1px solid rgba(244, 67, 54, 0.2);
         }
 
         .status-dot {
@@ -188,32 +234,40 @@
             height: 8px;
             border-radius: 50%;
             background: currentColor;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
         }
 
         /* Messages */
         .message {
-            padding: 12px 16px;
-            border-radius: 8px;
+            padding: 16px 20px;
+            border-radius: 16px;
             margin-bottom: 16px;
             font-size: 14px;
+            transition: all 0.3s ease;
+            border-left: 4px solid;
         }
 
         .message.success {
-            background: var(--primary-light);
+            background: linear-gradient(135deg, var(--primary-light) 0%, rgba(76, 175, 80, 0.05) 100%);
             color: var(--primary-dark);
-            border-left: 4px solid var(--success);
+            border-left-color: var(--success);
         }
 
         .message.error {
-            background: #FFEBEE;
+            background: linear-gradient(135deg, #FFEBEE 0%, rgba(244, 67, 54, 0.05) 100%);
             color: var(--error);
-            border-left: 4px solid var(--error);
+            border-left-color: var(--error);
         }
 
         .message.info {
-            background: #E3F2FD;
+            background: linear-gradient(135deg, #E3F2FD 0%, rgba(33, 150, 243, 0.05) 100%);
             color: #1976D2;
-            border-left: 4px solid #2196F3;
+            border-left-color: #2196F3;
         }
 
         /* Loading */
@@ -238,11 +292,557 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 20px 0;
+            z-index: 1000;
+            border-top: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .bottom-nav {
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+                max-width: 480px;
+                border-radius: 20px 20px 0 0;
+            }
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            position: relative;
+            min-width: 60px;
+        }
+
+        .nav-item:hover {
+            background: rgba(76, 175, 80, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .nav-item.active {
+            color: var(--primary-green);
+            background: linear-gradient(135deg, var(--primary-light) 0%, rgba(76, 175, 80, 0.1) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 12px rgba(76, 175, 80, 0.15);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* History Page */
+        .history-item {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--primary-green);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.02) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .history-date {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .history-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--on-surface);
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .history-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .history-btn.copy {
+            background: linear-gradient(135deg, var(--primary-light) 0%, rgba(76, 175, 80, 0.1) 100%);
+            color: var(--primary-dark);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .history-btn.copy:hover {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+        }
+
+        .history-btn.delete {
+            background: linear-gradient(135deg, #FFEBEE 0%, rgba(244, 67, 54, 0.05) 100%);
+            color: var(--error);
+            border: 1px solid rgba(244, 67, 54, 0.2);
+        }
+
+        .history-btn.delete:hover {
+            background: linear-gradient(135deg, var(--error) 0%, #D32F2F 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(244, 67, 54, 0.3);
+        }
+
+        /* Settings Page */
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .setting-item:hover {
+            background: rgba(76, 175, 80, 0.02);
+            margin: 0 -12px;
+            padding: 20px 12px;
+            border-radius: 12px;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: 15px;
+            color: var(--on-surface);
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e0e0e0;
+            transition: .4s;
+            border-radius: 28px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 2px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        select {
+            padding: 10px 16px;
+            border: 2px solid rgba(76, 175, 80, 0.2);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--on-surface);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+
+        select:hover {
+            border-color: var(--primary-green);
+            background: rgba(76, 175, 80, 0.02);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        /* AI Summary Card */
+        .ai-summary-controls {
+            text-align: center;
+        }
+
+        .ai-summary-main-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .ai-summary-main-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(76, 175, 80, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #2E7D32 100%);
+        }
+
+        .ai-summary-main-btn:disabled {
+            background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+            color: #9e9e9e;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .ai-summary-main-btn.loading {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            animation: pulse 2s infinite;
+        }
+
+        /* Text Highlighting */
+        .highlight-time {
+            background: linear-gradient(135deg, #E1F5FE 0%, #B3E5FC 100%);
+            color: #01579B;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+        }
+
+        .highlight-action {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            color: #E65100;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
+        }
+
+        .highlight-priority {
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+            color: #B71C1C;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(244, 67, 54, 0.3);
+        }
+
+        .highlight-entity {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            color: #4A148C;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(156, 39, 176, 0.3);
+        }
+
+        .highlight-communication {
+            background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
+            color: #1B5E20;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+        }
+
+        .highlight-yellow {
+            background: linear-gradient(135deg, #FFF59D 0%, #FFF176 100%);
+            color: #333;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(255, 235, 59, 0.3);
+        }
+
+        .highlight-green {
+            background: linear-gradient(135deg, #C8E6C9 0%, #A5D6A7 100%);
+            color: #1B5E20;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+        }
+
+        .highlight-blue {
+            background: linear-gradient(135deg, #BBDEFB 0%, #90CAF9 100%);
+            color: #0D47A1;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+        }
+
+        .highlight-pink {
+            background: linear-gradient(135deg, #F8BBD0 0%, #F48FB1 100%);
+            color: #880E4F;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(233, 30, 99, 0.3);
+        }
+
+        .highlight-orange {
+            background: linear-gradient(135deg, #FFE0B2 0%, #FFCC80 100%);
+            color: #E65100;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
+        }
+
+        /* AI Reply Suggestions */
+        .ai-reply-main-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(33, 150, 243, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .ai-reply-main-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(33, 150, 243, 0.4);
+            background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+        }
+
+        .ai-reply-main-btn:disabled {
+            background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+            color: #9e9e9e;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .ai-reply-main-btn.loading {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            animation: pulse 2s infinite;
+        }
+
+        .reply-suggestion {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 1px solid rgba(33, 150, 243, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .reply-suggestion:hover {
+            background: linear-gradient(135deg, #BBDEFB 0%, #90CAF9 100%);
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(33, 150, 243, 0.2);
+        }
+
+        .reply-suggestion-text {
+            font-size: 14px;
+            color: #0D47A1;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .reply-suggestion-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .reply-action-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reply-copy-btn {
+            background: rgba(33, 150, 243, 0.1);
+            color: #1976D2;
+        }
+
+        .reply-copy-btn:hover {
+            background: #1976D2;
+            color: white;
+        }
+
         /* Responsive */
         @media (max-width: 480px) {
             .app-container {
-                max-width: 100%;
                 box-shadow: none;
+            }
+            
+            .main-content {
+                padding: 12px;
+                padding-bottom: 100px;
+            }
+            
+            .card {
+                padding: 16px;
+                margin-bottom: 12px;
+            }
+            
+            .card-title {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+            
+            .record-button {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
+            
+            .recording-controls {
+                padding: 24px 20px;
+            }
+            
+            .transcription-display {
+                padding: 16px;
+                font-size: 15px;
+                min-height: 80px;
+            }
+            
+            .nav-item {
+                padding: 6px 12px;
+                min-width: 50px;
+            }
+            
+            .nav-icon {
+                font-size: 18px;
+            }
+            
+            .nav-label {
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .app-header h1 {
+                font-size: 20px;
+            }
+            
+            .app-header .subtitle {
+                font-size: 12px;
+            }
+            
+            .record-button {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
             }
         }
     </style>
@@ -259,38 +859,259 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Status Card -->
-            <div class="card">
-                <div class="status-indicator disconnected" id="connection-status">
-                    <span class="status-dot"></span>
-                    <span id="status-text">Checking connection...</span>
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <!-- Status Card -->
+                <div class="card">
+                    <div class="status-indicator disconnected" id="connection-status">
+                        <span class="status-dot"></span>
+                        <span id="status-text">Checking connection...</span>
+                    </div>
+                    <div id="connection-message"></div>
                 </div>
-                <div id="connection-message"></div>
-            </div>
 
-            <!-- Recording Card -->
-            <div class="card">
-                <div class="card-title">
-                    🎙️ Voice Recording
+                <!-- Recording Card -->
+                <div class="card">
+                    <div class="card-title">
+                        🎙️ Voice Recording
+                    </div>
+                    <div class="recording-controls">
+                        <button class="record-button" id="record-btn" onclick="toggleRecording()">
+                            🎤
+                        </button>
+                        <div class="record-text" id="record-text">
+                            Tap microphone to record
+                        </div>
+                    </div>
                 </div>
-                <div class="recording-controls">
-                    <button class="record-button" id="record-btn" onclick="toggleRecording()">
-                        🎤
-                    </button>
-                    <div class="record-text" id="record-text">
-                        Tap microphone to record
+
+                <!-- Transcription Card -->
+                <div class="card">
+                    <div class="card-title">
+                        📝 Transcription
+                    </div>
+                    <div class="transcription-display empty" id="transcription">
+                        Your speech will appear here...
+                    </div>
+                    <div id="summary-container" style="display: none;">
+                        <div class="card-title" style="margin-top: 16px;">
+                            🤖 AI Summary
+                        </div>
+                        <div class="transcription-display" id="summary">
+                            Summary will appear here...
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
+                        <button id="save-btn" class="history-btn copy" style="display: none;" onclick="saveToHistory()">
+                            💾 Save to History
+                        </button>
+                        <button id="summarize-btn" class="history-btn copy" style="display: none;" onclick="generateSummary()">
+                            🤖 Generate Summary
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Summary Card -->
+                <div class="card" id="ai-summary-card">
+                    <div class="card-title">
+                        🤖 AI Summary Assistant
+                    </div>
+                    <div class="ai-summary-controls">
+                        <div class="summary-info">
+                            <p style="color: var(--on-surface-variant); font-size: 14px; margin-bottom: 16px;">
+                                Generate intelligent summaries of your transcriptions. Choose your preferred summary length in settings.
+                            </p>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                                <span style="font-size: 14px; color: var(--on-surface);">Current setting:</span>
+                                <span id="current-summary-length" style="background: var(--primary-light); color: var(--primary-dark); padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
+                                    Medium
+                                </span>
+                            </div>
+                        </div>
+                        <button class="ai-summary-main-btn" onclick="generateSummaryFromHome()" disabled>
+                            🤖 Generate Summary
+                        </button>
+                        <div id="summary-status" style="margin-top: 12px; font-size: 14px; color: var(--on-surface-variant); text-align: center;">
+                            Record some speech first to generate a summary
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Reply Suggestions Card -->
+                <div class="card" id="ai-reply-card">
+                    <div class="card-title">
+                        💬 AI Reply Suggestions
+                    </div>
+                    <div class="ai-reply-controls">
+                        <div class="reply-info">
+                            <p style="color: var(--on-surface-variant); font-size: 14px; margin-bottom: 16px;">
+                                Get intelligent reply suggestions based on your transcribed content. Perfect for emails, messages, and conversations.
+                            </p>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                                <span style="font-size: 14px; color: var(--on-surface);">Reply style:</span>
+                                <span id="current-reply-style" style="background: var(--primary-light); color: var(--primary-dark); padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
+                                    Professional
+                                </span>
+                            </div>
+                        </div>
+                        <button class="ai-reply-main-btn" onclick="generateReplySuggestions()" disabled>
+                            💬 Generate Reply Suggestions
+                        </button>
+                        <div id="reply-status" style="margin-top: 12px; font-size: 14px; color: var(--on-surface-variant); text-align: center;">
+                            Record some speech first to generate reply suggestions
+                        </div>
+                        <div id="reply-suggestions" style="display: none; margin-top: 16px;">
+                            <div style="font-size: 12px; color: var(--primary-dark); font-weight: 600; margin-bottom: 8px;">💬 Suggested Replies:</div>
+                            <div id="reply-list"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Transcription Card -->
-            <div class="card">
-                <div class="card-title">
-                    📝 Transcription
+            <!-- History Page -->
+            <div id="history-page" class="page">
+                <div class="card">
+                    <div class="card-title">
+                        📚 History
+                    </div>
+                    <div id="history-list">
+                        <!-- History items will be added here -->
+                    </div>
+                    <div id="empty-history" class="transcription-display empty">
+                        No saved transcriptions yet
+                    </div>
+                    <button class="history-btn delete" style="margin-top: 12px;" onclick="clearHistory()">
+                        🗑️ Clear All History
+                    </button>
                 </div>
-                <div class="transcription-display empty" id="transcription">
-                    Your speech will appear here...
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="page">
+                <div class="card">
+                    <div class="card-title">
+                        ⚙️ Settings
+                    </div>
+                    
+                    <div class="setting-item">
+                        <span class="setting-label">Dark Mode</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Font Size</span>
+                        <select id="font-size-select" onchange="changeFontSize()">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Language</span>
+                        <select id="language-select" onchange="changeLanguage()">
+                            <option value="en-US">English (US)</option>
+                            <option value="en-GB">English (UK)</option>
+                            <option value="es-ES">Spanish</option>
+                            <option value="fr-FR">French</option>
+                            <option value="de-DE">German</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Auto-save</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-save-toggle" onchange="toggleAutoSave()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Show Volume Indicator</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="volume-toggle" checked onchange="toggleVolumeIndicator()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">AI Summary Length</span>
+                        <select id="summary-length-select" onchange="changeSummaryLength()">
+                            <option value="short">Short</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="long">Long</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Auto-generate Summary</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-summary-toggle" onchange="toggleAutoSummary()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Highlight Important Words</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="highlight-toggle" checked onchange="toggleHighlight()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Smart Highlighting</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="smart-highlight-toggle" checked onchange="toggleSmartHighlight()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Highlight Mode</span>
+                        <select id="highlight-mode-select" onchange="changeHighlightMode()">
+                            <option value="smart">Smart NLP (5 Categories)</option>
+                            <option value="manual">Manual Color</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">AI Reply Suggestions</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ai-reply-toggle" checked onchange="toggleAIReply()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <span class="setting-label">Reply Style</span>
+                        <select id="reply-style-select" onchange="changeReplyStyle()">
+                            <option value="professional">Professional</option>
+                            <option value="casual">Casual</option>
+                            <option value="friendly">Friendly</option>
+                            <option value="formal">Formal</option>
+                        </select>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showPage('home')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </div>
+            <div class="nav-item" onclick="showPage('history')">
+                <span class="nav-icon">📚</span>
+                <span class="nav-label">History</span>
+            </div>
+            <div class="nav-item" onclick="showPage('settings')">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">Settings</span>
             </div>
         </div>
     </div>
@@ -299,11 +1120,1019 @@
         let isRecording = false;
         let mediaRecorder = null;
         let audioChunks = [];
+        let currentTranscription = '';
+        let transcriptionHistory = [];
+        let currentSummary = '';
+        let settings = {
+            darkMode: false,
+            fontSize: 'medium',
+            language: 'en-US',
+            autoSave: false,
+            volumeIndicator: true,
+            summaryLength: 'medium',
+            autoSummary: false,
+            highlightWords: true,
+            smartHighlight: true,
+            highlightMode: 'smart',
+            highlightColor: 'yellow',
+            aiReplyEnabled: true,
+            replyStyle: 'professional'
+        };
 
         // Initialize app
         window.onload = function() {
+            loadSettings();
+            loadHistory();
             testConnection();
         };
+
+        // Page Navigation
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(`${pageName}-page`).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Refresh history when showing history page
+            if (pageName === 'history') {
+                displayHistory();
+            }
+        }
+
+        // Settings Management
+        function loadSettings() {
+            const saved = localStorage.getItem('greenvoiceSettings');
+            if (saved) {
+                settings = { ...settings, ...JSON.parse(saved) };
+            }
+            applySettings();
+        }
+
+        function saveSettings() {
+            localStorage.setItem('greenvoiceSettings', JSON.stringify(settings));
+        }
+
+        function applySettings() {
+            // Dark mode
+            if (settings.darkMode) {
+                document.documentElement.style.setProperty('--background', '#1a1a1a');
+                document.documentElement.style.setProperty('--surface', '#2d2d2d');
+                document.documentElement.style.setProperty('--on-surface', '#ffffff');
+                document.documentElement.style.setProperty('--on-surface-variant', '#cccccc');
+                document.getElementById('dark-mode-toggle').checked = true;
+            }
+            
+            // Font size
+            const root = document.documentElement;
+            switch(settings.fontSize) {
+                case 'small':
+                    root.style.fontSize = '14px';
+                    break;
+                case 'large':
+                    root.style.fontSize = '18px';
+                    break;
+                default:
+                    root.style.fontSize = '16px';
+            }
+            document.getElementById('font-size-select').value = settings.fontSize;
+            
+            // Language
+            document.getElementById('language-select').value = settings.language;
+            
+            // Auto save
+            document.getElementById('auto-save-toggle').checked = settings.autoSave;
+            
+            // Volume indicator
+            document.getElementById('volume-toggle').checked = settings.volumeIndicator;
+            
+            // Summary settings
+            document.getElementById('summary-length-select').value = settings.summaryLength;
+            document.getElementById('auto-summary-toggle').checked = settings.autoSummary;
+            
+            // Highlight settings
+            document.getElementById('highlight-toggle').checked = settings.highlightWords;
+            document.getElementById('smart-highlight-toggle').checked = settings.smartHighlight;
+            document.getElementById('highlight-mode-select').value = settings.highlightMode;
+            document.getElementById('highlight-color-select').value = settings.highlightColor;
+            
+            // AI Reply settings
+            document.getElementById('ai-reply-toggle').checked = settings.aiReplyEnabled;
+            document.getElementById('reply-style-select').value = settings.replyStyle;
+            
+            // Update displays
+            updateSummaryLengthDisplay();
+            updateReplyStyleDisplay();
+            updateHighlightModeDisplay();
+        }
+
+        function toggleDarkMode() {
+            settings.darkMode = !settings.darkMode;
+            if (settings.darkMode) {
+                document.documentElement.style.setProperty('--background', '#1a1a1a');
+                document.documentElement.style.setProperty('--surface', '#2d2d2d');
+                document.documentElement.style.setProperty('--on-surface', '#ffffff');
+                document.documentElement.style.setProperty('--on-surface-variant', '#cccccc');
+            } else {
+                // Reset to original values
+                document.documentElement.style.setProperty('--background', '#F1F8E9');
+                document.documentElement.style.setProperty('--surface', '#FFFFFF');
+                document.documentElement.style.setProperty('--on-surface', '#1B5E20');
+                document.documentElement.style.setProperty('--on-surface-variant', '#424242');
+            }
+            saveSettings();
+        }
+
+        function changeFontSize() {
+            const select = document.getElementById('font-size-select');
+            settings.fontSize = select.value;
+            const root = document.documentElement;
+            switch(settings.fontSize) {
+                case 'small':
+                    root.style.fontSize = '14px';
+                    break;
+                case 'large':
+                    root.style.fontSize = '18px';
+                    break;
+                default:
+                    root.style.fontSize = '16px';
+            }
+            saveSettings();
+        }
+
+        function changeLanguage() {
+            const select = document.getElementById('language-select');
+            settings.language = select.value;
+            saveSettings();
+        }
+
+        function toggleAutoSave() {
+            settings.autoSave = !settings.autoSave;
+            saveSettings();
+        }
+
+        function toggleVolumeIndicator() {
+            settings.volumeIndicator = !settings.volumeIndicator;
+            saveSettings();
+        }
+
+        function changeSummaryLength() {
+            const select = document.getElementById('summary-length-select');
+            settings.summaryLength = select.value;
+            saveSettings();
+            updateSummaryLengthDisplay();
+        }
+
+        function toggleAutoSummary() {
+            settings.autoSummary = !settings.autoSummary;
+            saveSettings();
+        }
+
+        function updateSummaryLengthDisplay() {
+            const display = document.getElementById('current-summary-length');
+            const lengthText = settings.summaryLength.charAt(0).toUpperCase() + settings.summaryLength.slice(1);
+            display.textContent = lengthText;
+        }
+
+        function toggleHighlight() {
+            settings.highlightWords = !settings.highlightWords;
+            saveSettings();
+            // Re-apply highlighting to current transcription
+            if (currentTranscription) {
+                updateTranscriptionDisplay(currentTranscription);
+            }
+        }
+
+        function changeHighlightColor() {
+            const select = document.getElementById('highlight-color-select');
+            settings.highlightColor = select.value;
+            saveSettings();
+            // Re-apply highlighting to current transcription
+            if (currentTranscription) {
+                updateTranscriptionDisplay(currentTranscription);
+            }
+        }
+
+        function toggleSmartHighlight() {
+            settings.smartHighlight = !settings.smartHighlight;
+            saveSettings();
+            // Re-apply highlighting to current transcription
+            if (currentTranscription) {
+                updateTranscriptionDisplay(currentTranscription);
+            }
+        }
+
+        function changeHighlightMode() {
+            const select = document.getElementById('highlight-mode-select');
+            settings.highlightMode = select.value;
+            saveSettings();
+            updateHighlightModeDisplay();
+            // Re-apply highlighting to current transcription
+            if (currentTranscription) {
+                updateTranscriptionDisplay(currentTranscription);
+            }
+        }
+
+        function updateHighlightModeDisplay() {
+            // Show/hide relevant settings based on mode
+            const manualColorSelect = document.getElementById('highlight-color-select');
+            const smartToggle = document.getElementById('smart-highlight-toggle');
+            
+            if (settings.highlightMode === 'smart') {
+                manualColorSelect.style.display = 'none';
+                smartToggle.style.display = 'block';
+            } else {
+                manualColorSelect.style.display = 'block';
+                smartToggle.style.display = 'none';
+            }
+        }
+
+        function toggleAIReply() {
+            settings.aiReplyEnabled = !settings.aiReplyEnabled;
+            saveSettings();
+            // Show/hide reply card
+            const replyCard = document.getElementById('ai-reply-card');
+            replyCard.style.display = settings.aiReplyEnabled ? 'block' : 'none';
+        }
+
+        function changeReplyStyle() {
+            const select = document.getElementById('reply-style-select');
+            settings.replyStyle = select.value;
+            saveSettings();
+            updateReplyStyleDisplay();
+        }
+
+        function updateReplyStyleDisplay() {
+            const display = document.getElementById('current-reply-style');
+            const styleText = settings.replyStyle.charAt(0).toUpperCase() + settings.replyStyle.slice(1);
+            display.textContent = styleText;
+        }
+
+        // History Management
+        function loadHistory() {
+            const saved = localStorage.getItem('greenvoiceHistory');
+            if (saved) {
+                transcriptionHistory = JSON.parse(saved);
+            }
+        }
+
+        function saveHistory() {
+            localStorage.setItem('greenvoiceHistory', JSON.stringify(transcriptionHistory));
+        }
+
+        function saveToHistory() {
+            if (!currentTranscription.trim()) return;
+            
+            const transcriptionItem = {
+                id: Date.now(),
+                text: currentTranscription.trim(),
+                date: new Date().toISOString(),
+                language: settings.language,
+                summary: currentSummary || ''
+            };
+            
+            transcriptionHistory.unshift(transcriptionItem);
+            saveHistory();
+            displayHistory();
+            
+            // Show success message
+            showMessage('✅ Saved to history!', 'success');
+            
+            // Hide save button
+            document.getElementById('save-btn').style.display = 'none';
+            document.getElementById('summarize-btn').style.display = 'none';
+            
+            // Clear current transcription
+            setTimeout(() => {
+                currentTranscription = '';
+                document.getElementById('transcription').textContent = 'Your speech will appear here...';
+                document.getElementById('transcription').classList.add('empty');
+            }, 2000);
+        }
+
+        function displayHistory() {
+            const historyList = document.getElementById('history-list');
+            const emptyHistory = document.getElementById('empty-history');
+            
+            if (transcriptionHistory.length === 0) {
+                historyList.style.display = 'none';
+                emptyHistory.style.display = 'block';
+                return;
+            }
+            
+            historyList.style.display = 'block';
+            emptyHistory.style.display = 'none';
+            
+            historyList.innerHTML = transcriptionHistory.map(item => `
+                <div class="history-item">
+                    <div class="history-date">${new Date(item.date).toLocaleString()}</div>
+                    <div class="history-text">${settings.highlightWords ? highlightImportantWords(item.text) : escapeHtml(item.text)}</div>
+                    ${item.summary ? `
+                        <div style="margin: 12px 0; padding: 12px; background: rgba(76, 175, 80, 0.05); border-radius: 12px; border-left: 3px solid var(--primary-green);">
+                            <div style="font-size: 12px; color: var(--primary-dark); font-weight: 600; margin-bottom: 6px;">🤖 AI Summary</div>
+                            <div style="font-size: 14px; color: var(--on-surface); line-height: 1.5;">${escapeHtml(item.summary)}</div>
+                        </div>
+                    ` : ''}
+                    <div class="history-actions">
+                        <button class="history-btn copy" onclick="copyToClipboard(${item.id})">📋 Copy Text</button>
+                        ${item.summary ? `<button class="history-btn copy" onclick="copySummary(${item.id})">📋 Copy Summary</button>` : ''}
+                        <button class="history-btn delete" onclick="deleteFromHistory(${item.id})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function copyToClipboard(id) {
+            const item = transcriptionHistory.find(h => h.id === id);
+            if (item) {
+                navigator.clipboard.writeText(item.text).then(() => {
+                    showMessage('📋 Text copied to clipboard!', 'success');
+                });
+            }
+        }
+
+        function copySummary(id) {
+            const item = transcriptionHistory.find(h => h.id === id);
+            if (item && item.summary) {
+                navigator.clipboard.writeText(item.summary).then(() => {
+                    showMessage('📋 Summary copied to clipboard!', 'success');
+                });
+            }
+        }
+
+        function deleteFromHistory(id) {
+            transcriptionHistory = transcriptionHistory.filter(h => h.id !== id);
+            saveHistory();
+            displayHistory();
+            showMessage('🗑️ Deleted from history', 'info');
+        }
+
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear all history? This cannot be undone.')) {
+                transcriptionHistory = [];
+                saveHistory();
+                displayHistory();
+                showMessage('🗑️ History cleared', 'info');
+            }
+        }
+
+        // Text Highlighting Functions
+        function updateTranscriptionDisplay(text) {
+            const transcriptionDiv = document.getElementById('transcription');
+            if (settings.highlightWords) {
+                if (settings.highlightMode === 'smart' && settings.smartHighlight) {
+                    transcriptionDiv.innerHTML = highlightWithNLP(text);
+                } else {
+                    transcriptionDiv.innerHTML = highlightImportantWords(text);
+                }
+            } else {
+                transcriptionDiv.textContent = text;
+            }
+        }
+
+        function highlightWithNLP(text) {
+            // NLP-based categorization with 5 categories
+            const categories = {
+                time: {
+                    words: [
+                        // Time expressions
+                        'today', 'tomorrow', 'yesterday', 'now', 'later', 'soon', 'early', 'late', 'tonight',
+                        'morning', 'afternoon', 'evening', 'night', 'dawn', 'dusk', 'midnight', 'noon',
+                        // Days and months
+                        'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+                        'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december',
+                        'week', 'month', 'year', 'daily', 'weekly', 'monthly', 'yearly', 'quarterly',
+                        // Time indicators
+                        'am', 'pm', 'o\'clock', 'hour', 'minute', 'second', 'moment', 'instant', 'duration', 'period'
+                    ],
+                    className: 'highlight-time'
+                },
+                action: {
+                    words: [
+                        // Action verbs
+                        'call', 'email', 'text', 'message', 'contact', 'reach', 'connect', 'communicate',
+                        'meet', 'schedule', 'arrange', 'organize', 'plan', 'prepare', 'setup', 'coordinate',
+                        'send', 'receive', 'deliver', 'forward', 'reply', 'respond', 'answer', 'acknowledge',
+                        'create', 'make', 'build', 'develop', 'design', 'construct', 'produce', 'generate',
+                        'update', 'change', 'modify', 'adjust', 'edit', 'revise', 'improve', 'enhance',
+                        'start', 'begin', 'launch', 'initiate', 'commence', 'kickoff', 'activate', 'enable',
+                        'stop', 'end', 'finish', 'complete', 'close', 'terminate', 'conclude', 'finalize',
+                        'go', 'come', 'arrive', 'depart', 'leave', 'return', 'travel', 'move', 'visit'
+                    ],
+                    className: 'highlight-action'
+                },
+                priority: {
+                    words: [
+                        // Priority indicators
+                        'urgent', 'important', 'critical', 'necessary', 'essential', 'crucial', 'vital', 'key',
+                        'priority', 'high', 'low', 'medium', 'immediate', 'asap', 'stat', 'rush',
+                        // Requirement words
+                        'must', 'should', 'need', 'have to', 'required', 'mandatory', 'obligatory', 'compulsory',
+                        'deadline', 'due', 'overdue', 'pending', 'outstanding', 'backlog', 'queue',
+                        // Warning words
+                        'warning', 'alert', 'notice', 'attention', 'caution', 'beware', 'watch', 'alert',
+                        'problem', 'issue', 'error', 'mistake', 'fault', 'bug', 'glitch', 'concern',
+                        'risk', 'danger', 'threat', 'emergency', 'crisis', 'disaster', 'failure'
+                    ],
+                    className: 'highlight-priority'
+                },
+                entity: {
+                    words: [
+                        // People and roles
+                        'manager', 'director', 'supervisor', 'boss', 'lead', 'team', 'staff', 'employee',
+                        'client', 'customer', 'user', 'guest', 'visitor', 'member', 'partner',
+                        'john', 'jane', 'mike', 'sarah', 'david', 'lisa', 'robert', 'maria',
+                        // Organizations and places
+                        'company', 'office', 'department', 'team', 'branch', 'headquarters', 'location',
+                        'apple', 'google', 'microsoft', 'amazon', 'facebook', 'twitter', 'linkedin',
+                        'new york', 'london', 'tokyo', 'paris', 'berlin', 'sydney', 'mumbai', 'beijing',
+                        // Products and services
+                        'product', 'service', 'software', 'application', 'system', 'platform', 'tool',
+                        'website', 'app', 'program', 'feature', 'function', 'capability', 'solution',
+                        // Documents and files
+                        'report', 'document', 'file', 'presentation', 'spreadsheet', 'email', 'letter', 'memo'
+                    ],
+                    className: 'highlight-entity'
+                },
+                communication: {
+                    words: [
+                        // Communication methods
+                        'phone', 'call', 'telephone', 'mobile', 'cell', 'smartphone', 'iphone', 'android',
+                        'email', 'mail', 'gmail', 'outlook', 'yahoo', 'hotmail', 'inbox',
+                        'message', 'text', 'sms', 'chat', 'whatsapp', 'telegram', 'slack', 'teams',
+                        'meeting', 'conference', 'call', 'discussion', 'conversation', 'interview', 'presentation',
+                        // Communication actions
+                        'talk', 'speak', 'discuss', 'explain', 'describe', 'mention', 'refer', 'state',
+                        'ask', 'inquire', 'question', 'query', 'request', 'propose', 'suggest',
+                        'listen', 'hear', 'understand', 'comprehend', 'realize', 'recognize', 'notice',
+                        'agree', 'disagree', 'accept', 'reject', 'confirm', 'deny', 'approve', 'decline',
+                        // Social interactions
+                        'hello', 'hi', 'goodbye', 'thanks', 'please', 'sorry', 'excuse', 'pardon',
+                        'welcome', 'congratulations', 'regards', 'best', 'sincerely', 'faithfully'
+                    ],
+                    className: 'highlight-communication'
+                }
+            };
+
+            let highlightedText = text;
+            
+            // Apply highlighting for each category
+            Object.entries(categories).forEach(([categoryName, categoryData]) => {
+                const pattern = new RegExp(`\\b(${categoryData.words.join('|')})\\b`, 'gi');
+                highlightedText = highlightedText.replace(pattern, (match) => {
+                    return `<span class="${categoryData.className}">${match}</span>`;
+                });
+            });
+            
+            return highlightedText;
+        }
+
+        function highlightImportantWords(text) {
+            // Important words that are commonly significant in speech
+            const importantWords = [
+                // Time-related
+                'today', 'tomorrow', 'yesterday', 'now', 'later', 'soon', 'early', 'late',
+                // Priority words
+                'important', 'urgent', 'critical', 'necessary', 'essential', 'crucial', 'vital',
+                // Action words
+                'must', 'should', 'need', 'have to', 'required', 'mandatory', 'please',
+                // Numbers and quantities
+                'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+                'first', 'second', 'third', 'fourth', 'fifth',
+                // Common important terms
+                'meeting', 'appointment', 'deadline', 'schedule', 'plan', 'goal', 'target',
+                'project', 'task', 'assignment', 'work', 'job', 'business',
+                // Location words
+                'here', 'there', 'where', 'location', 'place', 'address', 'office', 'home',
+                // Communication words
+                'call', 'email', 'message', 'contact', 'phone', 'talk', 'speak', 'discuss',
+                // Question words
+                'what', 'when', 'where', 'who', 'why', 'how', 'which', 'whose'
+            ];
+
+            let highlightedText = text;
+            
+            // Create a regex pattern for all important words (case insensitive)
+            const pattern = new RegExp(`\\b(${importantWords.join('|')})\\b`, 'gi');
+            
+            // Replace matches with highlighted spans
+            highlightedText = highlightedText.replace(pattern, (match) => {
+                return `<span class="highlight-${settings.highlightColor}">${match}</span>`;
+            });
+            
+            return highlightedText;
+        }
+
+        // AI Reply Suggestions
+        async function generateReplySuggestions() {
+            if (!currentTranscription.trim()) {
+                showMessage('❌ No transcription to generate replies for', 'error');
+                return;
+            }
+
+            const replyBtn = document.querySelector('.ai-reply-main-btn');
+            const replyStatus = document.getElementById('reply-status');
+            const replySuggestions = document.getElementById('reply-suggestions');
+            const replyList = document.getElementById('reply-list');
+            
+            // Show loading state
+            replyBtn.disabled = true;
+            replyBtn.classList.add('loading');
+            replyBtn.innerHTML = '⏳ Generating...';
+            replyStatus.textContent = 'Generating AI reply suggestions...';
+            replySuggestions.style.display = 'none';
+
+            try {
+                // Simulate AI API call (replace with actual API call)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const suggestions = await generateAIReplies(currentTranscription, settings.replyStyle);
+                
+                // Display suggestions
+                replyList.innerHTML = suggestions.map((suggestion, index) => `
+                    <div class="reply-suggestion" onclick="copyReply('${suggestion.replace(/'/g, "\\'")}')">
+                        <div class="reply-suggestion-text">${suggestion}</div>
+                        <div class="reply-suggestion-actions">
+                            <button class="reply-action-btn reply-copy-btn" onclick="event.stopPropagation(); copyReply('${suggestion.replace(/'/g, "\\'")}')">
+                                📋 Copy
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                replySuggestions.style.display = 'block';
+                replyStatus.textContent = 'Reply suggestions generated successfully!';
+                showMessage('💬 Reply suggestions generated!', 'success');
+                
+            } catch (error) {
+                replyStatus.textContent = 'Error generating reply suggestions. Please try again.';
+                showMessage('❌ Failed to generate reply suggestions', 'error');
+            } finally {
+                replyBtn.disabled = false;
+                replyBtn.classList.remove('loading');
+                replyBtn.innerHTML = '💬 Generate Reply Suggestions';
+            }
+        }
+
+        async function generateAIReplies(text, style) {
+            // Enhanced NLP-based reply generation
+            const lowerText = text.toLowerCase();
+            let suggestions = [];
+            
+            // Advanced text analysis for better context understanding
+            const analysis = analyzeTextContext(lowerText);
+            
+            // Generate contextual replies based on analysis
+            suggestions = generateContextualReplies(analysis, style);
+            
+            // In a real implementation, you would call an AI service like:
+            // const response = await fetch('/api/generate-replies', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ text, style })
+            // });
+            // const data = await response.json();
+            // return data.suggestions;
+            
+            return suggestions.slice(0, 3); // Return top 3 suggestions
+        }
+
+        function analyzeTextContext(text) {
+            const analysis = {
+                // Detect intent and context
+                intent: detectIntent(text),
+                entities: extractEntities(text),
+                sentiment: analyzeSentiment(text),
+                urgency: detectUrgency(text),
+                topics: extractTopics(text),
+                questions: extractQuestions(text),
+                actions: extractActions(text),
+                timeReferences: extractTimeReferences(text),
+                people: extractPeople(text)
+            };
+            
+            return analysis;
+        }
+
+        function detectIntent(text) {
+            // Detect the primary intent of the message
+            const intents = {
+                question: /\b(what|when|where|who|why|how|which|whose|can|could|would|should|is|are|do|does|did)\b/,
+                request: /\b(please|could you|can you|would you|need|require|want|wish|hope|expect|looking for|help)\b/,
+                information: /\b(information|details|update|status|progress|report|summary|overview|explanation|clarification)\b/,
+                confirmation: /\b(yes|no|okay|alright|got it|understood|confirmed|agreed|accepted|approved)\b/,
+                greeting: /\b(hello|hi|hey|good morning|good afternoon|good evening|welcome|greetings|hi there|hey there)\b/,
+                thanks: /\b(thank|thanks|appreciate|grateful|owe|credit|acknowledge)\b/,
+                problem: /\b(problem|issue|error|mistake|fault|bug|concern|difficulty|trouble|challenge|obstacle)\b/,
+                meeting: /\b(meeting|appointment|schedule|call|conference|discussion|interview|presentation)\b/,
+                deadline: /\b(deadline|due|urgent|asap|immediately|as soon as possible|priority|rush)\b/,
+                farewell: /\b(goodbye|bye|see you|talk soon|take care|farewell|have a good|have a great)\b/
+            };
+            
+            for (const [intent, pattern] of Object.entries(intents)) {
+                if (pattern.test(text)) {
+                    return intent;
+                }
+            }
+            
+            return 'general';
+        }
+
+        function extractEntities(text) {
+            // Extract named entities (people, places, organizations, etc.)
+            const entities = {
+                people: [],
+                places: [],
+                organizations: [],
+                dates: [],
+                times: [],
+                numbers: [],
+                products: []
+            };
+            
+            // Common names and titles
+            const peoplePatterns = [
+                /\b(john|jane|mike|sarah|david|lisa|robert|maria|james|mary|paul|anna|mark|emma|oliver|sophia)\b/gi,
+                /\b(manager|director|supervisor|boss|lead|team|staff|employee|client|customer|user|guest|member|partner)\b/gi
+            ];
+            
+            // Place names
+            const placePatterns = [
+                /\b(new york|london|tokyo|paris|berlin|sydney|mumbai|beijing|office|home|location|address|place)\b/gi,
+                /\b(room|conference|meeting|building|floor|desk|area)\b/gi
+            ];
+            
+            // Organization names
+            const orgPatterns = [
+                /\b(apple|google|microsoft|amazon|facebook|twitter|linkedin|company|team|department)\b/gi,
+                /\b(project|product|service|software|application|system|platform|tool|website|app)\b/gi
+            ];
+            
+            // Extract entities
+            peoplePatterns.forEach(pattern => {
+                const matches = text.match(pattern);
+                if (matches) entities.people.push(...matches);
+            });
+            
+            placePatterns.forEach(pattern => {
+                const matches = text.match(pattern);
+                if (matches) entities.places.push(...matches);
+            });
+            
+            orgPatterns.forEach(pattern => {
+                const matches = text.match(pattern);
+                if (matches) entities.organizations.push(...matches);
+            });
+            
+            // Extract dates and times
+            const dateMatches = text.match(/\b(\d{1,2}\/\d{1,2}\/\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\b(january|february|march|april|may|june|july|august|september|october|november|december|monday|tuesday|wednesday|thursday|friday|saturday|sunday|today|tomorrow|yesterday|tonight|morning|afternoon|evening|night|am|pm)\b)\b/gi);
+            if (dateMatches) entities.dates.push(...dateMatches);
+            
+            const timeMatches = text.match(/\b(\d{1,2}:\d{2}|o'clock|\bam|pm)\b/gi);
+            if (timeMatches) entities.times.push(...timeMatches);
+            
+            // Extract numbers
+            const numberMatches = text.match(/\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\b/gi);
+            if (numberMatches) entities.numbers.push(...numberMatches);
+            
+            return entities;
+        }
+
+        function analyzeSentiment(text) {
+            // Simple sentiment analysis
+            const positiveWords = ['good', 'great', 'excellent', 'amazing', 'wonderful', 'fantastic', 'perfect', 'love', 'awesome', 'brilliant', 'outstanding'];
+            const negativeWords = ['bad', 'terrible', 'awful', 'horrible', 'worst', 'hate', 'disappointed', 'frustrated', 'angry', 'upset', 'concerned', 'worried'];
+            
+            const positiveCount = positiveWords.filter(word => text.includes(word)).length;
+            const negativeCount = negativeWords.filter(word => text.includes(word)).length;
+            
+            if (positiveCount > negativeCount) return 'positive';
+            if (negativeCount > positiveCount) return 'negative';
+            if (positiveCount === 0 && negativeCount === 0) return 'neutral';
+            return 'mixed';
+        }
+
+        function detectUrgency(text) {
+            const urgencyWords = ['urgent', 'asap', 'immediately', 'emergency', 'critical', 'priority', 'rush', 'deadline', 'due', 'overdue', 'as soon as possible'];
+            const urgencyCount = urgencyWords.filter(word => text.includes(word)).length;
+            
+            if (urgencyCount >= 2) return 'high';
+            if (urgencyCount === 1) return 'medium';
+            return 'low';
+        }
+
+        function extractTopics(text) {
+            // Extract main topics from text
+            const topics = {
+                technology: /\b(software|app|system|platform|website|database|api|code|programming|development|tech|computer|digital|online|internet)\b/gi,
+                business: /\b(business|company|sales|marketing|revenue|profit|customer|client|meeting|presentation|report|strategy|market)\b/gi,
+                personal: /\b(personal|family|home|life|health|vacation|holiday|birthday|wedding|friend|relationship|private)\b/gi,
+                education: /\b(learn|study|course|class|school|university|college|student|teacher|homework|exam|grade|degree|education)\b/gi,
+                finance: /\b(money|payment|budget|cost|price|invoice|salary|wage|finance|bank|account|expense|investment|tax)\b/gi,
+                health: /\b(health|doctor|hospital|medicine|appointment|checkup|treatment|medical|fitness|exercise|diet|wellness)\b/gi
+            };
+            
+            const detectedTopics = [];
+            Object.entries(topics).forEach(([topic, pattern]) => {
+                if (pattern.test(text)) {
+                    detectedTopics.push(topic);
+                }
+            });
+            
+            return detectedTopics;
+        }
+
+        function extractQuestions(text) {
+            // Extract questions from text
+            const questionPatterns = [
+                /\b(what|when|where|who|why|how|which|whose|where|when|what|who|why|how|which|whose)\b.*\?/gi,
+                /\b(can|could|would|should|do|does|did|are|is|have|has|will|can|may|might)\b.*\?/gi,
+                /\b(is there|are there|do you have|can you|could you)\b.*\?/gi
+            ];
+            
+            const questions = [];
+            questionPatterns.forEach(pattern => {
+                const matches = text.match(pattern);
+                if (matches) questions.push(...matches);
+            });
+            
+            return questions;
+        }
+
+        function extractActions(text) {
+            // Extract action items and tasks
+            const actionPatterns = [
+                /\b(call|email|text|send|contact|reach|schedule|arrange|organize|plan|prepare|setup|coordinate|meet|discuss|talk|speak|explain|describe|mention|refer|state|ask|inquire|request|propose|suggest)\b/gi,
+                /\b(create|make|build|develop|design|construct|produce|generate|update|change|modify|adjust|edit|revise|improve|enhance|start|begin|launch|initiate|commence|kickoff|activate|enable|stop|end|finish|complete|close|terminate|conclude|finalize|go|come|arrive|depart|leave|return|travel|move|visit)\b/gi,
+                /\b(review|check|verify|confirm|validate|approve|accept|reject|deny|agree|disagree|sign|authorize|permit|allow)\b/gi
+            ];
+            
+            const actions = [];
+            actionPatterns.forEach(pattern => {
+                const matches = text.match(pattern);
+                if (matches) actions.push(...matches);
+            });
+            
+            return actions;
+        }
+
+        function extractTimeReferences(text) {
+            // Extract time-related expressions
+            const timePatterns = [
+                /\b(morning|afternoon|evening|night|dawn|dusk|midnight|noon|today|tomorrow|yesterday|tonight|now|later|soon|early|late|asap|immediately|right away|this week|next week|last week|in a moment|shortly|promptly)\b/gi,
+                /\b(am|pm|o'clock|hour|minute|second|moment|instant|duration|period|schedule|appointment|deadline|due date|time|timestamp)\b/gi
+            ];
+            
+            const timeRefs = [];
+            timePatterns.forEach(pattern => {
+                const matches = text.match(pattern);
+                if (matches) timeRefs.push(...matches);
+            });
+            
+            return timeRefs;
+        }
+
+        function extractPeople(text) {
+            // Extract people mentioned in text
+            const people = [];
+            
+            // Look for common names and titles
+            const namePattern = /\b([A-Z][a-z]+\s+[A-Z][a-z]+|[A-Z][a-z]+)\b/g;
+            const names = text.match(namePattern) || [];
+            
+            // Look for titles
+            const titlePattern = /\b(mr|mrs|ms|dr|prof|sir|madam|manager|director|supervisor|boss|lead|team|staff|employee|client|customer|user|guest|member|partner)\b/gi;
+            const titles = text.match(titlePattern) || [];
+            
+            people.push(...names, ...titles);
+            
+            return [...new Set(people)]; // Remove duplicates
+        }
+
+        function generateContextualReplies(analysis, style) {
+            const replies = [];
+            
+            // Generate replies based on comprehensive analysis
+            if (analysis.intent === 'question') {
+                replies.push(getStyleReply("That's a great question. Let me look into this and get back to you with a comprehensive answer.", style));
+                replies.push(getStyleReply("I understand your inquiry. Let me gather the relevant information and provide you with a detailed response.", style));
+                replies.push(getStyleReply("Good question! I'll need to clarify a few points before I can give you an accurate response.", style));
+            } else if (analysis.intent === 'request') {
+                replies.push(getStyleReply("I'll be happy to help with that. Let me know what specific details you need.", style));
+                replies.push(getStyleReply("Understood. I'll prioritize this and get it done as soon as possible.", style));
+                replies.push(getStyleReply("Thank you for your request. I'll review this and provide you with an update shortly.", style));
+            } else if (analysis.intent === 'meeting') {
+                replies.push(getStyleReply("I'll be there. Looking forward to discussing this further with you.", style));
+                replies.push(getStyleReply("Thank you for the meeting invitation. I'll confirm my attendance and prepare accordingly.", style));
+                replies.push(getStyleReply("Sounds good. Please send me the agenda and any materials you'd like me to review beforehand.", style));
+            } else if (analysis.intent === 'deadline' || analysis.urgency === 'high') {
+                replies.push(getStyleReply("I'll prioritize this and ensure it's completed on time. Thank you for the heads-up.", style));
+                replies.push(getStyleReply("Understood. I'll get this done as soon as possible and keep you updated on my progress.", style));
+                replies.push(getStyleReply("This has my full attention. I'll allocate the necessary resources to meet this deadline.", style));
+            } else if (analysis.intent === 'problem') {
+                replies.push(getStyleReply("I understand the issue. Let me work on finding a solution and get back to you shortly.", style));
+                replies.push(getStyleReply("Thank you for bringing this to my attention. I'll investigate this immediately and keep you informed.", style));
+                replies.push(getStyleReply("I see the challenge here. Let me address this right away and prevent any further issues.", style));
+            } else if (analysis.intent === 'thanks') {
+                replies.push(getStyleReply("You're welcome! Happy to help anytime.", style));
+                replies.push(getStyleReply("My pleasure. Don't hesitate to reach out if you need anything else.", style));
+                replies.push(getStyleReply("Glad I could assist. Feel free to ask if you have more questions.", style));
+            } else if (analysis.topics.includes('business')) {
+                replies.push(getStyleReply("I'll review this business matter and provide you with my professional recommendations.", style));
+                replies.push(getStyleReply("Thank you for the business update. I'll take appropriate action based on this information.", style));
+                replies.push(getStyleReply("I understand the business context. Let me coordinate with the relevant team members.", style));
+            } else if (analysis.topics.includes('technology')) {
+                replies.push(getStyleReply("I'll analyze this technical issue and provide you with a detailed solution.", style));
+                replies.push(getStyleReply("Let me check the system specifications and get back to you with technical guidance.", style));
+                replies.push(getStyleReply("I understand the technical requirements. I'll ensure this is implemented according to the specifications.", style));
+            } else if (analysis.entities.people.length > 0) {
+                const person = analysis.entities.people[0];
+                replies.push(getStyleReply(`I'll coordinate with ${person} regarding this matter and ensure we're aligned.`, style));
+                replies.push(getStyleReply(`Thank you for the information. I'll make sure ${person} is kept in the loop on this.`, style));
+                replies.push(getStyleReply(`I'll follow up with ${person} to confirm the details and proceed accordingly.`, style));
+            } else if (analysis.entities.places.length > 0) {
+                const place = analysis.entities.places[0];
+                replies.push(getStyleReply(`I'll be at ${place} as scheduled. Looking forward to seeing everyone there.`, style));
+                replies.push(getStyleReply(`Thank you for the location details. I'll make sure to arrive at ${place} on time.`, style));
+                replies.push(getStyleReply(`I'll coordinate the logistics for ${place} and ensure everything is prepared.`, style));
+            } else if (analysis.timeReferences.length > 0) {
+                replies.push(getStyleReply("I'll address this time-sensitive matter promptly and keep you updated on my progress.", style));
+                replies.push(getStyleReply("Understood the timeline. I'll ensure this is completed according to the specified schedule.", style));
+                replies.push(getStyleReply("I'll prioritize this based on the time constraints you've mentioned. Thank you for the clarity.", style));
+            } else if (analysis.actions.length > 0) {
+                const action = analysis.actions[0];
+                replies.push(getStyleReply(`I'll ${action} this right away and confirm once it's completed.`, style));
+                replies.push(getStyleReply(`Understood. I'll proceed with ${action} and provide you with an update shortly.`, style));
+                replies.push(getStyleReply(`I'll make sure to ${action} this according to your specifications and keep you informed.`, style));
+            } else if (analysis.sentiment === 'negative') {
+                replies.push(getStyleReply("I understand your concern. Let me address this issue and find a satisfactory solution for you.", style));
+                replies.push(getStyleReply("Thank you for your feedback. I'll take this seriously and work to improve the situation.", style));
+                replies.push(getStyleReply("I appreciate you bringing this to my attention. I'll investigate and resolve this promptly.", style));
+            } else if (analysis.sentiment === 'positive') {
+                replies.push(getStyleReply("That's wonderful news! Thank you for sharing this with me.", style));
+                replies.push(getStyleReply("Excellent! I'm glad to hear that. Let's keep the momentum going!", style));
+                replies.push(getStyleReply("Fantastic! I appreciate you letting me know. This calls for a celebration!", style));
+            } else {
+                // Generic responses for general cases
+                replies.push(getStyleReply("Thank you for sharing this. I'll review and get back to you with my thoughts.", style));
+                replies.push(getStyleReply("I understand. Let me process this information and respond appropriately.", style));
+                replies.push(getStyleReply("Got it. I'll take the necessary action based on this and follow up as needed.", style));
+            }
+            
+            return replies;
+        }
+
+        function getStyleReply(baseReply, style) {
+            const styles = {
+                professional: {
+                    greetings: ["Thank you for your message.", "I appreciate you reaching out."],
+                    closings: ["Best regards,", "Sincerely,", "Respectfully,"],
+                    tone: "formal and business-oriented"
+                },
+                casual: {
+                    greetings: ["Hey!", "Hi there!", "Thanks for letting me know."],
+                    closings: ["Cheers!", "Talk soon!", "Take care!"],
+                    tone: "relaxed and friendly"
+                },
+                friendly: {
+                    greetings: ["Hello! 😊", "Hi! Thanks for sharing.", "Hey there!"],
+                    closings: ["Have a great day!", "Best wishes!", "Talk to you soon!"],
+                    tone: "warm and approachable"
+                },
+                formal: {
+                    greetings: ["Dear Sir/Madam,", "To whom it may concern,", "Good day."],
+                    closings: ["Yours faithfully,", "With best regards,", "Cordially,"],
+                    tone: "very formal and respectful"
+                }
+            };
+            
+            const styleConfig = styles[style] || styles.professional;
+            
+            // Apply style transformations
+            let styledReply = baseReply;
+            
+            if (style === 'professional') {
+                styledReply = styledReply.replace(/I'll/g, "I will").replace(/got it/g, "understood");
+            } else if (style === 'casual') {
+                styledReply = styledReply.replace(/I will/g, "I'll").replace(/thank you/g, "thanks");
+            } else if (style === 'friendly') {
+                styledReply = styledReply + " 😊";
+            } else if (style === 'formal') {
+                styledReply = "Please accept this response as my formal reply: " + styledReply;
+            }
+            
+            return styledReply;
+        }
+
+        function copyReply(reply) {
+            navigator.clipboard.writeText(reply).then(() => {
+                showMessage('📋 Reply copied to clipboard!', 'success');
+            });
+        }
+
+        // AI Summary Generation
+        function generateSummaryFromHome() {
+            generateSummary();
+        }
+
+        async function generateSummary() {
+            if (!currentTranscription.trim()) {
+                showMessage('❌ No transcription to summarize', 'error');
+                return;
+            }
+
+            const summaryContainer = document.getElementById('summary-container');
+            const summaryDiv = document.getElementById('summary');
+            const summarizeBtn = document.getElementById('summarize-btn');
+            const mainSummaryBtn = document.querySelector('.ai-summary-main-btn');
+            const summaryStatus = document.getElementById('summary-status');
+            
+            // Show loading state
+            summaryContainer.style.display = 'block';
+            summaryDiv.textContent = 'Generating summary...';
+            summaryDiv.classList.add('loading');
+            summarizeBtn.disabled = true;
+            summarizeBtn.textContent = '⏳ Generating...';
+            mainSummaryBtn.disabled = true;
+            mainSummaryBtn.classList.add('loading');
+            mainSummaryBtn.innerHTML = '⏳ Generating...';
+            summaryStatus.textContent = 'Generating AI summary...';
+
+            try {
+                // Simulate AI API call (replace with actual API call)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const summary = await generateAISummary(currentTranscription, settings.summaryLength);
+                currentSummary = summary;
+                
+                summaryDiv.textContent = summary;
+                summaryDiv.classList.remove('empty', 'loading');
+                
+                showMessage('✅ Summary generated successfully!', 'success');
+                summaryStatus.textContent = 'Summary generated successfully!';
+                
+                // Auto-save if enabled
+                if (settings.autoSummary) {
+                    setTimeout(() => saveToHistory(), 1000);
+                }
+                
+            } catch (error) {
+                summaryDiv.textContent = 'Error generating summary. Please try again.';
+                summaryStatus.textContent = 'Error generating summary. Please try again.';
+                showMessage('❌ Failed to generate summary', 'error');
+            } finally {
+                summarizeBtn.disabled = false;
+                summarizeBtn.textContent = '🤖 Generate Summary';
+                mainSummaryBtn.disabled = false;
+                mainSummaryBtn.classList.remove('loading');
+                mainSummaryBtn.innerHTML = '🤖 Generate Summary';
+            }
+        }
+
+        async function generateAISummary(text, length) {
+            // This is a mock implementation - replace with actual AI API call
+            const words = text.split(' ');
+            let summaryLength;
+            
+            switch(length) {
+                case 'short':
+                    summaryLength = Math.min(20, Math.floor(words.length * 0.1));
+                    break;
+                case 'long':
+                    summaryLength = Math.min(50, Math.floor(words.length * 0.3));
+                    break;
+                default: // medium
+                    summaryLength = Math.min(35, Math.floor(words.length * 0.2));
+            }
+            
+            // Simple extractive summarization (replace with actual AI API)
+            const summary = words.slice(0, summaryLength).join(' ') + (words.length > summaryLength ? '...' : '');
+            
+            // In a real implementation, you would call an AI service like:
+            // const response = await fetch('/api/summarize', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ text, length })
+            // });
+            // const data = await response.json();
+            // return data.summary;
+            
+            return summary;
+        }
 
         // Connection testing
         async function testConnection() {
@@ -428,13 +2257,35 @@
                     const data = await response.json();
                     const transcriptionText = data.transcription || 'No transcription available';
                     
-                    // Update UI
-                    transcription.textContent = transcriptionText;
-                    transcription.classList.remove('empty');
+                    // Update current transcription
+                    currentTranscription = transcriptionText;
+                    
+                    // Update UI with highlighting
+                    updateTranscriptionDisplay(transcriptionText);
+                    document.getElementById('transcription').classList.remove('empty');
                     recordText.textContent = 'Tap microphone to record again';
+                    
+                    // Show save button
+                    document.getElementById('save-btn').style.display = 'inline-block';
+                    document.getElementById('summarize-btn').style.display = 'inline-block';
+
+                    // Enable AI summary button
+                    const mainSummaryBtn = document.querySelector('.ai-summary-main-btn');
+                    mainSummaryBtn.disabled = false;
+                    document.getElementById('summary-status').textContent = 'Ready to generate summary!';
+
+                    // Enable AI reply button
+                    const mainReplyBtn = document.querySelector('.ai-reply-main-btn');
+                    mainReplyBtn.disabled = false;
+                    document.getElementById('reply-status').textContent = 'Ready to generate reply suggestions!';
 
                     // Show success message
                     showMessage('✅ Audio transcribed successfully!', 'success');
+                    
+                    // Auto-generate summary if enabled
+                    if (settings.autoSummary) {
+                        setTimeout(() => generateSummary(), 1000);
+                    }
                 };
 
                 reader.readAsDataURL(audioBlob);

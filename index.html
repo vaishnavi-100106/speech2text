@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>🎤 Speech-to-Text</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active" data-page="home">Home</a></li>
+                <li><a href="#history" class="nav-link" data-page="history">History</a></li>
+                <li><a href="#settings" class="nav-link" data-page="settings">Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="container">
+                    <div class="header">
+                        <h1>Speech-to-Text</h1>
+                        <p>Real-time transcription for hearing impaired users</p>
+                    </div>
+
+                    <div class="status" id="status">
+                        <span class="status-indicator" id="statusIndicator"></span>
+                        <span id="statusText">Ready to record</span>
+                    </div>
+
+                    <div class="controls">
+                        <button id="recordBtn" class="btn btn-record" onclick="toggleRecording()">
+                            🎤 Start Recording
+                        </button>
+                        <button id="clearBtn" class="btn btn-clear" onclick="clearCurrent()">
+                            🗑️ Clear
+                        </button>
+                    </div>
+
+                    <div class="transcription">
+                        <h3>📝 Current Transcription</h3>
+                        <div id="currentTranscription" class="transcription-text">
+                            Click "Start Recording" to begin transcription...
+                        </div>
+                        <button id="saveBtn" class="btn btn-save" onclick="saveTranscription()" style="display: none;">
+                            💾 Save to History
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Page -->
+            <div id="history-page" class="page">
+                <div class="container">
+                    <div class="header">
+                        <h1>📚 History</h1>
+                        <p>Your saved transcriptions</p>
+                    </div>
+
+                    <div class="history-controls">
+                        <button id="clearHistoryBtn" class="btn btn-danger" onclick="clearHistory()">
+                            🗑️ Clear All History
+                        </button>
+                        <button id="exportBtn" class="btn btn-export" onclick="exportHistory()">
+                            📥 Export History
+                        </button>
+                    </div>
+
+                    <div id="historyList" class="history-list">
+                        <!-- History items will be added here dynamically -->
+                    </div>
+
+                    <div id="emptyHistory" class="empty-state">
+                        <p>No saved transcriptions yet. Start recording and save your first transcription!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="page">
+                <div class="container">
+                    <div class="header">
+                        <h1>⚙️ Settings</h1>
+                        <p>Customize your experience</p>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>🎨 Appearance</h3>
+                        
+                        <div class="setting-item">
+                            <label for="darkModeToggle">
+                                <span>Dark Mode</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                                    <span class="slider"></span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <label for="fontSize">
+                                <span>Font Size</span>
+                                <select id="fontSize" onchange="changeFontSize()">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                    <option value="extra-large">Extra Large</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>🎤 Recording Settings</h3>
+                        
+                        <div class="setting-item">
+                            <label for="language">
+                                <span>Language</span>
+                                <select id="language" onchange="changeLanguage()">
+                                    <option value="en-US">English (US)</option>
+                                    <option value="en-GB">English (UK)</option>
+                                    <option value="es-ES">Spanish</option>
+                                    <option value="fr-FR">French</option>
+                                    <option value="de-DE">German</option>
+                                    <option value="it-IT">Italian</option>
+                                    <option value="pt-BR">Portuguese</option>
+                                    <option value="ru-RU">Russian</option>
+                                    <option value="zh-CN">Chinese</option>
+                                    <option value="ja-JP">Japanese</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <label for="autoSave">
+                                <span>Auto-save to History</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="autoSave" onchange="toggleAutoSave()">
+                                    <span class="slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>🔊 Audio</h3>
+                        
+                        <div class="setting-item">
+                            <label for="volumeIndicator">
+                                <span>Show Volume Indicator</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="volumeIndicator" checked onchange="toggleVolumeIndicator()">
+                                    <span class="slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>💾 Data Management</h3>
+                        
+                        <div class="setting-item">
+                            <button class="btn btn-danger" onclick="clearAllData()">
+                                🗑️ Clear All Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
